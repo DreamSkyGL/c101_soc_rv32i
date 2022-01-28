@@ -18,6 +18,7 @@ module core_c1_exu_lsu (
 
 input		[7:0]		cmd_type_bus,		//指令类型
 input		[7:0]		cmd_op_memory,		//指令操作
+input           exu_pause,
 
 
 input		[31:0]	exu_rs1_data,
@@ -63,7 +64,7 @@ assign	lsu_rd_data	  =	({32{cmd_LB}}   & {{24{lsu_load_data[7]}},lsu_load_data[7
 // store instruction
 //----------------------------------------------------
 assign	lsu_store_addr  =	exu_rs1_data + exu_imm32;
-assign	lsu_store_en		=	cmd_SB | cmd_SH | cmd_SW;
+assign	lsu_store_en		=	~exu_pause & (cmd_SB | cmd_SH | cmd_SW);
 assign	lsu_store_data	=	({32{cmd_SB}} & {exu_rs2_data[7:0] ,exu_rs2_data[7:0] ,exu_rs2_data[7:0] ,exu_rs2_data[7:0]})
                         |	({32{cmd_SH}} & {exu_rs2_data[15:0],exu_rs2_data[15:0]})
                         |	({32{cmd_SW}} &  exu_rs2_data);						

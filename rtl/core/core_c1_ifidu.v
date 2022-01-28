@@ -57,6 +57,7 @@ assign  o_pc_valid_biu    = rst_n & ~i_ifu_pause & ~pc_wash_req;
 assign  o_pc_addr_biu     = pc_addr_r;
 
 assign  o_inst_valid_exu  = rst_n & ~i_ifu_pause & ~(pc_wash_req | pc_wash_req_r) & i_inst_valid_biu;
+//assign  o_inst_valid_exu  = rst_n & ~i_ifu_pause & ~(pc_wash_req | pc_wash_req_r);
 assign  o_pc_addr_exu     = pc_addr_out_r;
 assign  o_inst_exu        = i_inst_biu;
 
@@ -65,7 +66,7 @@ assign  o_mem_load_valid  = o_inst_valid_exu & (|o_cmd_op_bus[24:20]);
 
 always @ (posedge clk or negedge rst_n) begin
   if(!rst_n) begin
-    pc_addr_r <= 32'h40000000;
+    pc_addr_r <= 32'h00000000;
   end
   else if(i_pc_wash_req_e) begin
     pc_addr_r <= i_pc_wash_addr_e;

@@ -135,6 +135,7 @@ core_c1_exu_lsu core_c1_exu_lsu(
 
 .cmd_type_bus(cmd_type_bus),		//指令类型
 .cmd_op_memory(cmd_op_mem),		//指令操作
+.exu_pause(exu_pause),
 
 .exu_rs1_data(exu_rs1_data),
 .exu_rs2_data(exu_rs2_data),

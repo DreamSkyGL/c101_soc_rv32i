@@ -134,8 +134,8 @@ wire      arslv3;
 wire      ar_ok;
 wire      r_ok;
 
-assign    arslv0  = sb_araddr_m0[31:30] ==  2'b01;
-assign    arslv1  = sb_araddr_m0[31:30] ==  2'b00;
+assign    arslv0  = sb_araddr_m0[31:30] ==  2'b00;
+assign    arslv1  = sb_araddr_m0[31:30] ==  2'b01;
 assign    arslv2  = sb_araddr_m0[31:30] ==  2'b10;
 assign    arslv3  = sb_araddr_m0[31:30] ==  2'b11;
 
@@ -220,8 +220,8 @@ wire      wslv3;
 wire      w_ok;
 wire      b_ok;
 
-assign    wslv0  = sb_waddr_m0[31:30] ==  2'b01;
-assign    wslv1  = sb_waddr_m0[31:30] ==  2'b00;
+assign    wslv0  = sb_waddr_m0[31:30] ==  2'b00;
+assign    wslv1  = sb_waddr_m0[31:30] ==  2'b01;
 assign    wslv2  = sb_waddr_m0[31:30] ==  2'b10;
 assign    wslv3  = sb_waddr_m0[31:30] ==  2'b11;
 
@@ -298,10 +298,10 @@ assign    sb_bready_s0      = wslv[0] ? sb_bready_m0 : 1'b0;
 assign    sb_bready_s1      = wslv[1] ? sb_bready_m0 : 1'b0;
 assign    sb_bready_s2      = wslv[2] ? sb_bready_m0 : 1'b0;
 assign    sb_bready_s3      = wslv[3] ? sb_bready_m0 : 1'b0;
-assign    sb_bresp_m0       = ({32{wslv[3]}} & sb_bresp_s3)
-                            | ({32{wslv[2]}} & sb_bresp_s2)
-                            | ({32{wslv[1]}} & sb_bresp_s1)
-                            | ({32{wslv[0]}} & sb_bresp_s0);
+assign    sb_bresp_m0       = (wslv[3] & sb_bresp_s3)
+                            | (wslv[2] & sb_bresp_s2)
+                            | (wslv[1] & sb_bresp_s1)
+                            | (wslv[0] & sb_bresp_s0);
 
 
 

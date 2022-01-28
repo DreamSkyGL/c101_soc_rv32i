@@ -15,68 +15,30 @@
 //-----------------------------------------------------------------------------
 
 module ram (
-// gloab signals
-input           sb_clk,
-input           sb_rst_n,
-// read address channel
-input           sb_arvalid,
-output          sb_arready,
-input   [31:0]  sb_araddr,
-// read data channel
-output          sb_rvalid,
-input           sb_rready,
-output  [31:0]  sb_rdata,
-// write channel
-input           sb_wvalid,
-output          sb_wready,
-input   [31:0]  sb_waddr,
-input   [31:0]  sb_wdata,
-input   [3:0]   sb_wstrb,
-// write response channel
-output          sb_bvalid,
-input           sb_bready,
-output          sb_bresp
+  input           clk,
+  input           we,
+  input   [9:0]   waddr,
+  input   [31:0]  wdata,
+  input           re,
+  input   [9:0]   raddr,
+  output  [31:0]  rdata
 );
 
 reg   [31:0]  mem [1023:0];
+reg   [31:0]  rdata_r;
 
-reg           sb_bvalid_r;
-reg           sb_rvalid_r;
-reg   [31:0]  sb_rdata_r;
-
-assign        sb_wready   = 1'b1;
-assign        sb_bvalid   = sb_bvalid_r;
-assign        sb_bresp    = 1'b0;
-assign        sb_arready  = 1'b1;
-assign        sb_rvalid   = sb_rvalid_r;
-assign        sb_rdata    = sb_rdata_r;
-
+assign        rdata = rdata_r;
 
 // write data
-always @ (posedge sb_clk) begin
-  if(!sb_rst_n) begin
-    sb_bvalid_r <=  1'b0;
-  end
-  else if(sb_wvalid & sb_wready) begin
-    mem[sb_waddr[11:2]]  <= sb_wdata;
-    sb_bvalid_r <= 1'b1;
-  end
-  else if(sb_bready) begin
-    sb_bvalid_r <= 1'b0;
+always @ (posedge clk) begin
+  if(we) begin
+    mem[waddr]  <= wdata;
   end
 end
 // read data
-always @ (posedge sb_clk) begin
-  if(!sb_rst_n) begin
-    sb_rdata_r  <=  32'h0;
-    sb_rvalid_r <=  1'b0;
-  end
-  else if(sb_arvalid & sb_arready) begin
-    sb_rdata_r  <= mem[sb_araddr[11:2]];
-    sb_rvalid_r <= 1'b1;
-  end
-  else if(sb_rready) begin
-    sb_rvalid_r <= 1'b0;
+always @ (posedge clk) begin
+  if(re) begin
+    rdata_r  <= mem[raddr];
   end
 end
 

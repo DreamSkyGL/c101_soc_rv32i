@@ -310,7 +310,7 @@ core_c1_top u_core_c1_top(
 
 );
 
-ram u_imem (
+sb_ram_wrapper u_imem (
 // gloab signals
 .sb_clk(clk),
 .sb_rst_n(rst_n),
@@ -335,7 +335,7 @@ ram u_imem (
 );
 
 
-ram u_dmem (
+sb_ram_wrapper u_dmem (
 // gloab signals
 .sb_clk(clk),
 .sb_rst_n(rst_n),

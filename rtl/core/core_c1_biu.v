@@ -97,6 +97,7 @@ reg           sb_arvalid_m0_r;
 reg   [31:0]  sb_araddr_m0_r;
 reg           sb_arflag_m0_r;     //ar通道握手成功标志
 reg   [31:0]  sb_rdata_m0_r;
+reg           sb_rvalid_m0_r;
 
 always @ (posedge clk or negedge rst_n) begin
   if(!rst_n) begin
@@ -129,6 +130,18 @@ always @ (posedge clk or negedge rst_n) begin
   end
 end
 
+always @ (posedge clk or negedge rst_n) begin
+  if(!rst_n) begin
+    sb_rvalid_m0_r  <=  1'b0;
+  end
+  else if(ifu_pause & sb_rvalid_m0 & sb_rready_m0) begin
+    sb_rvalid_m0_r  <=  sb_rvalid_m0;
+  end
+  else if(!ifu_pause) begin
+    sb_rvalid_m0_r  <= 1'b0;
+  end
+end
+
 //暂停原因：
 //arvalid给出，但没有回ready，使得arvalid被寄存。
 //ar通道握手成功，但之后没有传回rvalid
@@ -137,9 +150,9 @@ assign  m0_read_pause = sb_arvalid_m0_r | (sb_arflag_m0_r & ~sb_rvalid_m0);
 assign  sb_arvalid_m0 = ifu_pc_valid | sb_arvalid_m0_r;
 assign  sb_araddr_m0  = ifu_pc_valid ? ifu_pc_addr : sb_araddr_m0_r;
 // read data channel
-assign  sb_rready_m0  = !ifu_pause;
+assign  sb_rready_m0  = 1'b1;
 assign  ifu_inst        = sb_rvalid_m0 ? sb_rdata_m0 : sb_rdata_m0_r;
-assign  ifu_inst_valid  = sb_rvalid_m0;
+assign  ifu_inst_valid  = sb_rvalid_m0 | sb_rvalid_m0_r;
 // write channel
 assign  sb_wvalid_m0  = 1'b0;
 assign  sb_waddr_m0   = 32'b0;
